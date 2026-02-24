@@ -202,26 +202,33 @@ function openPlayer(index){
 
   modal.style.display = "flex";
 
-  // 🔴 If DRM channel (has url1 + keyId)
-  if(ch.url1 && ch.keyId && ch.key){
+  // ✅ DASH + ClearKey channels
+  if (ch.url1 && ch.keyId && ch.key) {
 
-    const mpd = encodeURIComponent(ch.url1); // primary URL
+    const mpd = encodeURIComponent(ch.url1);
     const keyId = encodeURIComponent(ch.keyId);
     const key = encodeURIComponent(ch.key);
 
     frame.src = `player.html?mpd=${mpd}&keyId=${keyId}&key=${key}&title=${encodeURIComponent(ch.name)}`;
 
-  } else {
+  }
+  // ✅ Normal channels (HLS / iframe)
+  else if (ch.link) {
 
-    // normal HLS / iframe channel
     frame.src = ch.link;
 
   }
+  else {
 
-  document.getElementById("playIcon").className="fas fa-play";
-  document.getElementById("muteIcon").className="fas fa-volume-up";
+    alert("Channel link not found.");
+    return;
+
+  }
+
+  // Reset icons
+  document.getElementById("playIcon").className = "fas fa-play";
+  document.getElementById("muteIcon").className = "fas fa-volume-up";
 }
-
 // Close modal
 function closePlayer(){
   const frame=document.getElementById("playerFrame");
